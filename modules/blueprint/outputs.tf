@@ -1,9 +1,19 @@
+output "this" {
+  value = port_blueprint.this
+}
+
 output "identifier" {
-  description = "Identificador del blueprint creado"
-  value       = port_blueprint.this.identifier
+  value = port_blueprint.this.identifier
 }
 
 output "id" {
-  description = "ID interno del recurso en el state de Terraform"
-  value       = port_blueprint.this.id
+  value = port_blueprint.this.id
+}
+
+output "permission" {
+  value = try(port_blueprint_permissions.this[0], null)
+}
+
+output "aggregation_properties_ready" {
+  value = try(port_aggregation_properties.this[0].id, null)
 }

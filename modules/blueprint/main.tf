@@ -1,21 +1,46 @@
+##################################################
 # Módulo: blueprint
-# Crea un blueprint de Port con propiedades,
-# mirror properties y relaciones configurables.
+# Crea un blueprint de Port con propiedades tipadas,
+# relaciones, ownership, aggregation properties y
+# permisos (incluyendo el caso "owned by team" que
+# el provider no soporta nativamente — ver permissions.tf).
+##################################################
 
 resource "port_blueprint" "this" {
-  identifier  = var.identifier
-  title       = var.title
-  icon        = var.icon
-  description = var.description
+  title                 = var.title
+  identifier            = var.identifier
+  description           = var.description
+  icon                  = var.icon
+  create_catalog_page   = var.create_catalog_page
+  force_delete_entities = var.force_delete_entities
 
   properties = {
-    string_props  = var.string_props
-    number_props  = var.number_props
-    boolean_props = var.boolean_props
-    array_props   = var.array_props
-    object_props  = var.object_props
+    string_props = {
+      for k, v in var.list_string_properties : k => merge(
+        v,
+        try(v.enum_colors, null) != null ? { enumColors = v.enum_colors } : {}
+      )
+    }
+    number_props = {
+      for k, v in var.list_number_properties : k => merge(
+        v,
+        try(v.enum_colors, null) != null ? { enumColors = v.enum_colors } : {}
+      )
+    }
+    boolean_props = var.list_boolean_properties
+    array_props   = var.list_array_properties
+    object_props  = var.list_object_properties
   }
 
-  mirror_properties = var.mirror_properties
-  relations         = var.relations
+  relations               = var.has_relation ? var.list_relations : {}
+  mirror_properties       = var.list_mirror_properties
+  calculation_properties  = var.list_calculation_properties
+
+  ownership = var.ownership
+}
+
+resource "port_aggregation_properties" "this" {
+  count                = length(var.list_aggregation_properties) > 0 ? 1 : 0
+  blueprint_identifier = port_blueprint.this.identifier
+  properties           = var.list_aggregation_properties
 }

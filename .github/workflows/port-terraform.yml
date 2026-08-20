@@ -19,7 +19,7 @@ on:
         required: true
         default: "dev"
         type: choice
-        options: [dev, prod]
+        options: [dev]
 
 permissions:
   contents: read
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [dev, prod]
+        environment: [dev]
     defaults:
       run:
         working-directory: environments/${{ matrix.environment }}
