@@ -1,0 +1,3 @@
+port_client_id     = "tu-client-id"
+port_client_secret = "tu-client-secret"
+port_base_url      = "https://api.getport.io"
