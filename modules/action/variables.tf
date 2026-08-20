@@ -21,9 +21,7 @@ variable "publish" {
   default = false
 }
 
-##################################################
 # Trigger: automation
-##################################################
 
 variable "automation_trigger" {
   type    = bool
@@ -79,9 +77,9 @@ variable "jq_condition" {
   }
 }
 
-##################################################
+
 # Trigger: self-service
-##################################################
+
 
 variable "self_service_trigger" {
   type    = bool
@@ -141,9 +139,9 @@ variable "titles" {
   default = {}
 }
 
-##################################################
+
 # Backend method: webhook
-##################################################
+
 
 variable "webhook_method" {
   type    = bool
@@ -180,9 +178,9 @@ variable "body_webhook_method" {
   default = null
 }
 
-##################################################
+
 # Backend method: upsert entity
-##################################################
+
 
 variable "upsert_entity_method" {
   type    = bool
@@ -204,9 +202,9 @@ variable "mapping_entity" {
   default = {}
 }
 
-##################################################
+
 # Aprobación / notificaciones
-##################################################
+
 
 variable "email_notification" {
   type    = bool
@@ -218,9 +216,9 @@ variable "required_approval" {
   default = false
 }
 
-##################################################
+
 # Permisos
-##################################################
+
 
 variable "action_permissions" {
   description = "Permisos de execute/approve. null = no gestionar permisos desde Terraform."

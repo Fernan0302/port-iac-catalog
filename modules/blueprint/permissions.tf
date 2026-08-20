@@ -1,14 +1,3 @@
-##################################################
-# Permisos del blueprint.
-#
-# Caso normal (readOwnedByTeam = false): el provider soporta
-# port_blueprint_permissions directamente.
-#
-# Caso "owned by team" (readOwnedByTeam = true): el provider NO soporta
-# ese flag en el resource nativo, así que se aplica vía PATCH directo a
-# la API de Port con un local-exec. Requiere var.port_api_token.
-##################################################
-
 resource "port_blueprint_permissions" "this" {
   count                 = var.permissions.readOwnedByTeam ? 0 : 1
   blueprint_identifier  = port_blueprint.this.identifier
@@ -43,7 +32,7 @@ resource "terraform_data" "port_patch_read_permissions" {
     command = <<-BASH
       set -euo pipefail
 
-      if [ -z "${PORT_TOKEN:-}" ]; then
+      if [ -z "$${PORT_TOKEN:-}" ]; then
         echo "ERROR: port_api_token no está definido. Es requerido cuando permissions.readOwnedByTeam = true." >&2
         exit 1
       fi

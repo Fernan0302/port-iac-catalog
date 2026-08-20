@@ -1,8 +1,7 @@
-##################################################
-# Ambiente: dev
+
 # Compone los módulos de blueprint/entity para
 # desplegar un catálogo de ejemplo en Port.
-##################################################
+
 
 # --- Blueprint 1: Demo Environment ---------------------------------------
 module "environment_blueprint" {
