@@ -72,7 +72,7 @@ default     = []
 }
 
 variable "widgets" {
-description = "Lista de widgets de la página en formato JSON"
-type        = list(string)
-default     = []
+  description = "Lista de widgets de la página"
+  type        = list(any)
+  default     = []
 }
