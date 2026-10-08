@@ -8,14 +8,20 @@ desplegado vía GitHub Actions.
 
 ```
 .
-├── .github/workflows/port-terraform.yml   # Pipeline CI/CD (plan en PR, apply en main/dispatch)
+├── .github/
+│   └── workflows/
+│       └── port-terraform.yml   # Pipeline CI/CD (plan en PR, apply en main/dispatch)
 ├── modules/
 │   ├── blueprint/     # Módulo genérico para crear blueprints
-│   ├── entity/         # Módulo genérico para crear entidades
-│   └── scorecard/      # Módulo genérico para crear scorecards
+│   ├── entity/        # Módulo genérico para crear entidades
+│   ├── scorecard/     # Módulo genérico para crear scorecards
+│   ├── page/          # Módulo genérico para crear páginas
+│   ├── folder/        # Módulo genérico para crear carpetas
+│   ├── webhook/       # Módulo genérico para crear webhooks
+│   └── action/        # Módulo genérico para crear acciones
 └── environments/
-    ├── dev/             # Composición de módulos para el ambiente dev
-    └── prod/            # Composición de módulos para el ambiente prod
+    ├── dev/           # Composición de módulos para el ambiente dev
+    └── prod/          # Composición de módulos para el ambiente prod
 ```
 
 Cada ambiente (`environments/<env>`) es la raíz de Terraform (root module) que

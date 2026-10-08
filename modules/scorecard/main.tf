@@ -5,7 +5,7 @@
 resource "port_scorecard" "this" {
   identifier           = var.identifier
   title                = var.title
-  blueprint_identifier = var.blueprint_identifier
+  blueprint = var.blueprint_identifier
 
   rules = var.rules
 }
