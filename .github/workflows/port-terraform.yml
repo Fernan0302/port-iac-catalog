@@ -1,7 +1,15 @@
-name: Terraform DEV
+name: Terraform
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Ambiente a desplegar"
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   terraform:
@@ -9,13 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: environments/dev
-
-    env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
-      TF_VAR_port_client_id: ${{ secrets.PORT_CLIENT_ID_DEV }}
-      TF_VAR_port_client_secret: ${{ secrets.PORT_CLIENT_SECRET_DEV }}
-      TF_VAR_port_base_url: ${{ secrets.PORT_BASE_URL }}
+        working-directory: environments/${{ inputs.environment }}
 
     steps:
       - name: Checkout
@@ -28,9 +30,19 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Plan
         run: terraform plan
+        env:
+          TF_VAR_port_client_id: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_ID_DEV || secrets.PORT_CLIENT_ID_PROD }}
+          TF_VAR_port_client_secret: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_SECRET_DEV || secrets.PORT_CLIENT_SECRET_PROD }}
+          TF_VAR_port_base_url: ${{ secrets.PORT_BASE_URL }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        env:
+          TF_VAR_port_client_id: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_ID_DEV || secrets.PORT_CLIENT_ID_PROD }}
+          TF_VAR_port_client_secret: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_SECRET_DEV || secrets.PORT_CLIENT_SECRET_PROD }}
+          TF_VAR_port_base_url: ${{ secrets.PORT_BASE_URL }}
