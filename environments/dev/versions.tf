@@ -1,4 +1,12 @@
 terraform {
+  cloud {
+    organization = "Banco-Exterior"
+
+    workspaces {
+      name = "port-dev"
+    }
+  }
+
   required_version = ">= 1.5"
 
   required_providers {
@@ -7,16 +15,6 @@ terraform {
       version = "~> 2.0"
     }
   }
-
-  # Backend remoto recomendado para CI/CD (evita perder el state entre runs).
-  # Descomenta y ajusta según tu proveedor de state, o inicializa con
-  # `terraform init -backend-config=...` desde el workflow.
-  #
-  # backend "s3" {
-  #   bucket = "nombre-del-bucket-state"
-  #   key    = "port/dev/terraform.tfstate"
-  #   region = "us-east-1"
-  # }
 }
 
 provider "port" {
