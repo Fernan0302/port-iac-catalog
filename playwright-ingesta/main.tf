@@ -4,7 +4,7 @@ module "repos_test" {
   identifier  = "repos_test"
   title       = "Repos-tests"
   icon        = "Github"
-  description = "Repositorios y ramas que contienen las pruebas Playwright a ejecutar."
+  description = "Repositorios de pruebas Playwright - DEV"
 
   list_string_properties = {
     nombre = {
