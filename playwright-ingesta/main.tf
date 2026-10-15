@@ -227,12 +227,12 @@ module "catalog_repositorios_github" {
 
   identifier  = "repositorios_github"
   title       = "Repositorios de GitHub"
-  type        = "catalog"
+  type        = "blueprint-entities"
   description = "Catálogo de repositorios de GitHub."
   icon        = "Github"
   blueprint   = module.listado_repo_github.identifier
 
-  widgets     = []
+  widgets      = []
   page_filters = []
 }
 
@@ -241,7 +241,7 @@ module "catalog_repositorios_playwright" {
 
   identifier  = "repositorios_playwright"
   title       = "Repositorios Playwright"
-  type        = "catalog"
+  type        = "blueprint-entities"
   description = "Catálogo de repositorios de pruebas Playwright."
   icon        = "Playwright"
   blueprint   = module.repos_test.identifier
