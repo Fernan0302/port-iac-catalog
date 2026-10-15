@@ -219,3 +219,33 @@ module "pruebas_playwright" {
 
   required_approval = false
 }
+
+#Catalogos
+
+module "catalog_repositorios_github" {
+  source = "../modules/page"
+
+  identifier  = "repositorios_github"
+  title       = "Repositorios de GitHub"
+  type        = "catalog"
+  description = "Catálogo de repositorios de GitHub."
+  icon        = "Github"
+  blueprint   = module.listado_repo_github.identifier
+
+  widgets     = []
+  page_filters = []
+}
+
+module "catalog_repositorios_playwright" {
+  source = "../modules/page"
+
+  identifier  = "repositorios_playwright"
+  title       = "Repositorios Playwright"
+  type        = "catalog"
+  description = "Catálogo de repositorios de pruebas Playwright."
+  icon        = "Playwright"
+  blueprint   = module.repos_test.identifier
+
+  widgets      = []
+  page_filters = []
+}
