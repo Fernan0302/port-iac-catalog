@@ -67,7 +67,7 @@ module "creacion_proyecto_playwright" {
 
   self_service_trigger = true
   operation            = "DAY-2"
-  blueprint_identifier = "listadoRepoGitHub"
+  blueprint_identifier = module.listado_repo_github.identifier
 
   list_string_properties = {
     microfrontends = {
