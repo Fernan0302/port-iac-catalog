@@ -1,10 +1,18 @@
-name: Terraform
+name: Port Terraform
 
 on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
   workflow_dispatch:
     inputs:
       environment:
-        description: "Ambiente a desplegar"
+        description: "Ambiente de Port a desplegar"
         required: true
         type: choice
         options:
@@ -13,14 +21,13 @@ on:
 
 jobs:
   terraform:
-    runs-on: ubuntu-latest
+    name: Terraform ${{ inputs.environment || 'dev' }}
 
-    env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+    runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: environments/${{ inputs.environment }}
+        working-directory: environments/${{ inputs.environment || 'dev' }}
 
     steps:
       - name: Checkout
@@ -36,14 +43,7 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
-        env:
-          TF_VAR_port_client_id: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_ID_DEV || secrets.PORT_CLIENT_ID_PROD }}
-          TF_VAR_port_client_secret: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_SECRET_DEV || secrets.PORT_CLIENT_SECRET_PROD }}
-          TF_VAR_port_base_url: ${{ inputs.environment == 'dev' && 'https://api.getport.io' || 'https://api.us.getport.io' }}
 
       - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve
-        env:
-          TF_VAR_port_client_id: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_ID_DEV || secrets.PORT_CLIENT_ID_PROD }}
-          TF_VAR_port_client_secret: ${{ inputs.environment == 'dev' && secrets.PORT_CLIENT_SECRET_DEV || secrets.PORT_CLIENT_SECRET_PROD }}
-          TF_VAR_port_base_url: ${{ inputs.environment == 'dev' && 'https://api.getport.io' || 'https://api.us.getport.io' }}
