@@ -258,96 +258,170 @@
 #   ]
 # }
 
-module "platform_service" {
-  source = "../modules/blueprint"
+# module "platform_service" {
+#   source = "../modules/blueprint"
 
-  identifier  = "platform_ingesta"
-  title       = "Platform ingesta"
-  description = "Blueprint para el catálogo de servicios de plataforma conectado con AWS"
-  icon        = "Microservices"
+#   identifier  = "platform_ingesta"
+#   title       = "Platform ingesta"
+#   description = "Blueprint para el catálogo de servicios de plataforma conectado con AWS"
+#   icon        = "Microservices"
 
-  create_catalog_page   = true
-  force_delete_entities = false
+#   create_catalog_page   = true
+#   force_delete_entities = false
 
-  list_string_properties = {
-    repository = {
-      title       = "Repository"
-      description = "Repositorio del servicio"
-      required    = true
-    }
+#   list_string_properties = {
+#     repository = {
+#       title       = "Repository"
+#       description = "Repositorio del servicio"
+#       required    = true
+#     }
 
-    branch = {
-      title       = "Branch"
-      description = "Rama del repositorio"
-      required    = true
-    }
+#     branch = {
+#       title       = "Branch"
+#       description = "Rama del repositorio"
+#       required    = true
+#     }
 
-    environment = {
-      title       = "Environment"
-      description = "Ambiente del servicio"
-      required    = true
-    }
+#     environment = {
+#       title       = "Environment"
+#       description = "Ambiente del servicio"
+#       required    = true
+#     }
 
-    pipelineStatus = {
-      title       = "Pipeline Status"
-      description = "Estado del pipeline"
-      required    = true
-    }
+#     pipelineStatus = {
+#       title       = "Pipeline Status"
+#       description = "Estado del pipeline"
+#       required    = true
+#     }
 
-    sonarQualityGate = {
-      title       = "Sonar Quality Gate"
-      description = "Resultado del Quality Gate de SonarQube"
-    }
-  }
+#     sonarQualityGate = {
+#       title       = "Sonar Quality Gate"
+#       description = "Resultado del Quality Gate de SonarQube"
+#     }
+#   }
 
-  list_number_properties = {
-    sonarCoverage = {
-      title       = "Sonar Coverage"
-      description = "Porcentaje de cobertura de código"
-    }
+#   list_number_properties = {
+#     sonarCoverage = {
+#       title       = "Sonar Coverage"
+#       description = "Porcentaje de cobertura de código"
+#     }
 
-    sonarBugs = {
-      title       = "Sonar Bugs"
-      description = "Cantidad de bugs encontrados por SonarQube"
-    }
+#     sonarBugs = {
+#       title       = "Sonar Bugs"
+#       description = "Cantidad de bugs encontrados por SonarQube"
+#     }
 
-    sonarVulnerabilities = {
-      title       = "Sonar Vulnerabilities"
-      description = "Cantidad de vulnerabilidades encontradas por SonarQube"
-    }
+#     sonarVulnerabilities = {
+#       title       = "Sonar Vulnerabilities"
+#       description = "Cantidad de vulnerabilidades encontradas por SonarQube"
+#     }
 
-    sonarCodeSmells = {
-      title       = "Sonar Code Smells"
-      description = "Cantidad de code smells encontrados por SonarQube"
-    }
+#     sonarCodeSmells = {
+#       title       = "Sonar Code Smells"
+#       description = "Cantidad de code smells encontrados por SonarQube"
+#     }
 
-    checkmarxCritical = {
-      title       = "Checkmarx Critical"
-      description = "Vulnerabilidades críticas encontradas por Checkmarx"
-    }
+#     checkmarxCritical = {
+#       title       = "Checkmarx Critical"
+#       description = "Vulnerabilidades críticas encontradas por Checkmarx"
+#     }
 
-    checkmarxHigh = {
-      title       = "Checkmarx High"
-      description = "Vulnerabilidades altas encontradas por Checkmarx"
-    }
+#     checkmarxHigh = {
+#       title       = "Checkmarx High"
+#       description = "Vulnerabilidades altas encontradas por Checkmarx"
+#     }
 
-    checkmarxMedium = {
-      title       = "Checkmarx Medium"
-      description = "Vulnerabilidades medias encontradas por Checkmarx"
-    }
+#     checkmarxMedium = {
+#       title       = "Checkmarx Medium"
+#       description = "Vulnerabilidades medias encontradas por Checkmarx"
+#     }
 
-    newRelicResponseTime = {
-      title       = "New Relic Response Time"
-      description = "Tiempo de respuesta en milisegundos"
-    }
+#     newRelicResponseTime = {
+#       title       = "New Relic Response Time"
+#       description = "Tiempo de respuesta en milisegundos"
+#     }
 
-    newRelicErrorRate = {
-      title       = "New Relic Error Rate"
-      description = "Porcentaje de errores"
-    }
+#     newRelicErrorRate = {
+#       title       = "New Relic Error Rate"
+#       description = "Porcentaje de errores"
+#     }
 
-    newRelicApdex = {
-      title       = "New Relic Apdex"
-      description = "Indicador Apdex de New Relic"
-    }
-  }
+#     newRelicApdex = {
+#       title       = "New Relic Apdex"
+#       description = "Indicador Apdex de New Relic"
+#     }
+#   }
+
+#   module "pruebas_playwright" {
+#   source = "../modules/action"
+
+#   identifier  = "pruebas_playwright4"
+#   title       = "Pruebas Playwright4"
+#   icon        = "Github"
+#   description = "Ejecuta las pruebas Playwright de un repositorio mediante un workflow de GitHub Actions."
+
+#   self_service_trigger = true
+#   operation            = "DAY-2"
+#   blueprint_identifier = module.repos_test.identifier
+
+#   list_string_properties = {
+#     grep = {
+#       title       = "Filtro pruebas"
+#       description = "Filtro de pruebas a ejecutar (opcional). Equivale a --grep de Playwright."
+#     }
+
+#     target_ref = {
+#       title            = "Rama"
+#       default_jq_query = ".entity.properties.rama"
+#       description      = "Rama del repositorio de pruebas a ejecutar."
+#       required         = true
+#     }
+
+#     test_repo = {
+#       title            = "Repositorio pruebas a ejecutar"
+#       default_jq_query = ".entity.properties.nombre"
+#       description      = "Repositorio que contiene las pruebas a ejecutar."
+#       required         = true
+#     }
+#     use_agent = {
+#       title       = "Usar agente de Port"
+#       description = "Selecciona si se utiliza el agente de Port para registrar el informe."
+#       enum        = ["si", "no"]
+#       default     = "si"
+#     }
+#   }
+
+#   order_properties = [
+#     "test_repo",
+#     "target_ref",
+#     "grep",
+#     "use_agent"
+#   ]
+
+#   webhook_method = true
+#   url            = "https://api.github.com/repos/abastimo/playwright-quickstart/actions/workflows/run-tests.yml/dispatches"
+#   agent          = false
+#   synchronized   = false
+#   method         = "POST"
+
+#   headers = {
+#     Accept                 = "application/vnd.github+json"
+#     Authorization          = "Bearer {{ .secrets.Secret_Playwright }}"
+#     "Content-Type"         = "application/json"
+#     RUN_ID                 = "{{ .run.id }}"
+#     "X-GitHub-Api-Version" = "2022-11-28"
+#   }
+
+#   body_webhook_method = jsonencode({
+#     inputs = {
+#       grep        = "{{.inputs.grep // \"\"}}"
+#       port_run_id = "{{.run.id}}"
+#       target_ref  = "{{.inputs.target_ref}}"
+#       test_repo   = "{{.inputs.test_repo}}"
+#       use_agent   = "{{.inputs.use_agent // \"\"}}"
+#     }
+#     ref = "main"
+#   })
+
+#   required_approval = false
+# }

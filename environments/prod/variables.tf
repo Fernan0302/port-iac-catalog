@@ -10,7 +10,7 @@ variable "port_client_secret" {
 
 variable "port_base_url" {
   type    = string
-  default = "https://api.getport.io"
+  default = "https://api.us.getport.io"
 }
 
 variable "newrelic_ingest_webhook_signature" {
