@@ -28,6 +28,35 @@ module "repos_test" {
   }
 }
 
+module "listado_repo_github" {
+  source = "../modules/blueprint"
+
+  identifier  = "listadoRepoGitHub"
+  title       = "Listado Repositorios de GitHub"
+  icon        = "Microservice"
+  description = "Listado de repositorios de GitHub."
+
+  list_string_properties = {
+    readme = {
+      title       = "README"
+      description = "README del repositorio."
+      required    = false
+    }
+
+    url = {
+      title       = "Repository URL"
+      description = "URL del repositorio de GitHub."
+      required    = false
+    }
+
+    defaultBranch = {
+      title       = "Default branch"
+      description = "Rama principal o predeterminada del repositorio."
+      required    = false
+    }
+  }
+}
+
 module "creacion_proyecto_playwright" {
   source = "../modules/action"
 
