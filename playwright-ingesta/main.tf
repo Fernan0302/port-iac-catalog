@@ -223,7 +223,7 @@ module "pruebas_playwright" {
 #Catalogos
 
 module "catalog_repositorios_github" {
-  source = "../modules/page"
+  source = "../modules/Page"
 
   identifier  = "repositorios_github"
   title       = "Repositorios de GitHub"
@@ -237,7 +237,7 @@ module "catalog_repositorios_github" {
 }
 
 module "catalog_repositorios_playwright" {
-  source = "../modules/page"
+  source = "../modules/Page"
 
   identifier  = "repositorios_playwright"
   title       = "Repositorios Playwright"
