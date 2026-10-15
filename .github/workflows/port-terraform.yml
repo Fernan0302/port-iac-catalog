@@ -15,6 +15,9 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+
     defaults:
       run:
         working-directory: environments/${{ inputs.environment }}
@@ -30,8 +33,6 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Plan
         run: terraform plan
