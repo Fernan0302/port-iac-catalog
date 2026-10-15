@@ -1,4 +1,12 @@
 terraform {
+  cloud {
+    organization = "Banco-Exterior"
+
+    workspaces {
+      name = "port-dev"
+    }
+  }
+
   required_version = ">= 1.5"
 
   required_providers {
