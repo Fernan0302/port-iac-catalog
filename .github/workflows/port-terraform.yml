@@ -21,7 +21,7 @@ on:
 
 jobs:
   terraform:
-    name: Terraform ${{ inputs.environment || 'dev' }}
+    name: Terraform - ${{ inputs.environment || 'dev' }}
 
     runs-on: ubuntu-latest
 
@@ -40,10 +40,18 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFC_TOKEN }}
 
       - name: Terraform Plan
         run: terraform plan
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFC_TOKEN }}
 
       - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+        if: >
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          github.event_name == 'workflow_dispatch'
         run: terraform apply -auto-approve
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFC_TOKEN }}
