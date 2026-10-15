@@ -3,7 +3,7 @@ terraform {
     organization = "Banco-Exterior"
 
     workspaces {
-      name = "port-dev"
+      name = "port-prod"
     }
   }
 
