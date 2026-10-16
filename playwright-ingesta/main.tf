@@ -5,6 +5,7 @@ module "repos_test" {
   title       = "Repos-tests"
   icon        = "Github"
   description = "Repositorios de pruebas Playwright - DEV"
+  force_delete_entities = true
 
   list_string_properties = {
     nombre = {
@@ -28,31 +29,164 @@ module "repos_test" {
   }
 }
 
-module "listado_repo_github" {
+
+module "playwright_report" {
   source = "../modules/blueprint"
 
-  identifier  = "listadoRepoGitHub"
-  title       = "Listado Repositorios de GitHub"
-  icon        = "Microservice"
-  description = "Listado de repositorios de GitHub."
+  identifier  = "playwrightReport"
+  title       = "Playwright Report"
+  icon        = "Test"
+  description = "Reportes de ejecución de pruebas Playwright - DEV"
+  force_delete_entities = true
 
   list_string_properties = {
-    readme = {
-      title       = "README"
-      description = "README del repositorio."
+    repository = {
+      title       = "Repository"
+      description = "Repositorio donde se ejecutaron las pruebas."
       required    = false
     }
 
-    url = {
-      title       = "Repository URL"
-      description = "URL del repositorio de GitHub."
+    organization = {
+      title       = "Organization"
+      description = "Organización de GitHub dueña del repositorio."
       required    = false
     }
 
-    defaultBranch = {
-      title       = "Default branch"
-      description = "Rama principal o predeterminada del repositorio."
+    branch = {
+      title       = "Branch"
+      description = "Rama sobre la que se ejecutaron las pruebas."
       required    = false
+    }
+
+    commit = {
+      title       = "Commit SHA"
+      description = "SHA del commit ejecutado."
+      required    = false
+    }
+
+    pipeline = {
+      title       = "Pipeline / Workflow"
+      description = "Pipeline o workflow que ejecutó las pruebas."
+      required    = false
+    }
+
+    runUrl = {
+      title       = "GitHub Run URL"
+      description = "URL de la ejecución en GitHub Actions."
+      format      = "url"
+      required    = false
+    }
+
+    reportUrl = {
+      title       = "HTML Report URL"
+      description = "URL del reporte HTML de Playwright."
+      format      = "url"
+      required    = false
+    }
+
+    status = {
+      title       = "Status"
+      description = "Resultado global de la ejecución."
+      enum        = ["passed", "failed", "flaky", "interrupted"]
+      enum_colors = {
+        passed      = "green"
+        failed      = "red"
+        flaky       = "orange"
+        interrupted = "darkGray"
+      }
+      required = false
+    }
+
+    executedAt = {
+      title       = "Executed At"
+      description = "Fecha y hora de la ejecución."
+      format      = "date-time"
+      required    = false
+    }
+
+    summary = {
+      title       = "Summary"
+      description = "Resumen de la ejecución en markdown."
+      format      = "markdown"
+      required    = false
+    }
+  }
+
+  list_number_properties = {
+    runId = {
+      title       = "GitHub Run ID"
+      description = "ID de la ejecución en GitHub."
+      required    = false
+    }
+
+    runNumber = {
+      title       = "GitHub Run Number"
+      description = "Número de la ejecución en GitHub."
+      required    = false
+    }
+
+    durationMs = {
+      title       = "Duration (ms)"
+      description = "Duración total en milisegundos."
+      required    = false
+    }
+
+    testsTotal = {
+      title       = "Tests Total"
+      description = "Total de tests ejecutados."
+      required    = false
+    }
+
+    testsPassed = {
+      title       = "Tests Passed"
+      description = "Tests que pasaron."
+      required    = false
+    }
+
+    testsFailed = {
+      title       = "Tests Failed"
+      description = "Tests que fallaron."
+      required    = false
+    }
+
+    testsFlaky = {
+      title       = "Tests Flaky"
+      description = "Tests inestables (flaky)."
+      required    = false
+    }
+
+    testsSkipped = {
+      title       = "Tests Skipped"
+      description = "Tests omitidos."
+      required    = false
+    }
+  }
+
+  list_array_properties = {
+    browsers = {
+      title       = "Browsers / Projects"
+      description = "Navegadores o proyectos de Playwright ejecutados."
+      required    = false
+    }
+
+    failedTests = {
+      title       = "Failed Tests"
+      description = "Lista de tests que fallaron."
+      required    = false
+    }
+
+    tests = {
+      title       = "Tests Detail"
+      description = "List of tests with title, file, project, status, duration and error"
+      required    = false
+    }
+  }
+
+  list_calculation_properties = {
+    passRate = {
+      title       = "Pass Rate (%)"
+      type        = "number"
+      calculation = "if (.properties.testsTotal // 0) > 0 then (((.properties.testsPassed // 0) * 10000 / .properties.testsTotal | round) / 100) else null end"
     }
   }
 }
@@ -67,12 +201,13 @@ module "creacion_proyecto_playwright" {
 
   self_service_trigger = true
   operation            = "DAY-2"
-  blueprint_identifier = module.listado_repo_github.identifier
+  blueprint_identifier = "githubRepository"
 
   list_string_properties = {
     microfrontends = {
-      description = "Microfrontends a levantar (opcional)."
-      title       = "Microfrontends a levantar"
+      description      = "Microfrontends a levantar (opcional)."
+      title            = "Microfrontends a levantar"
+      visible_jq_query = ".form.system_type == \"react-container\""
     }
     ref = {
       default     = "main"
@@ -116,14 +251,14 @@ module "creacion_proyecto_playwright" {
   ]
 
   webhook_method = true
-  url            = "https://api.github.com/repos/abastimo/playwright-quickstart/actions/workflows/create-project.yml/dispatches"
+  url            = "https://api.github.com/repos/Banco-Exterior-CA/ing-plat-tools-playwright/actions/workflows/create-project.yml/dispatches"
   agent          = false
   synchronized   = false
   method         = "POST"
 
   headers = {
     Accept                 = "application/vnd.github+json"
-    Authorization          = "Bearer {{ .secrets.Secret_Playwright }}"
+    Authorization          = "Bearer {{ .secrets.TokenGithub }}"
     "Content-Type"         = "application/json"
     RUN_ID                 = "{{ .run.id }}"
     "X-GitHub-Api-Version" = "2022-11-28"
@@ -193,14 +328,14 @@ module "pruebas_playwright" {
   ]
 
   webhook_method = true
-  url            = "https://api.github.com/repos/abastimo/playwright-quickstart/actions/workflows/run-tests.yml/dispatches"
+  url            = "https://api.github.com/repos/Banco-Exterior-CA/ing-plat-tools-playwright/actions/workflows/run-tests.yml/dispatches"
   agent          = false
   synchronized   = false
   method         = "POST"
 
   headers = {
     Accept                 = "application/vnd.github+json"
-    Authorization          = "Bearer {{ .secrets.Secret_Playwright }}"
+    Authorization          = "Bearer {{ .secrets.TokenGithub }}"
     "Content-Type"         = "application/json"
     RUN_ID                 = "{{ .run.id }}"
     "X-GitHub-Api-Version" = "2022-11-28"
@@ -222,19 +357,7 @@ module "pruebas_playwright" {
 
 #Catalogos
 
-module "catalog_repositorios_github" {
-  source = "../modules/Page"
 
-  identifier  = "repositorios_github"
-  title       = "Repositorios de GitHub"
-  type        = "blueprint-entities"
-  description = "Catálogo de repositorios de GitHub."
-  icon        = "Github"
-  blueprint   = module.listado_repo_github.identifier
-
-  widgets      = []
-  page_filters = []
-}
 
 module "catalog_repositorios_playwright" {
   source = "../modules/Page"
@@ -246,6 +369,81 @@ module "catalog_repositorios_playwright" {
   icon        = "Playwright"
   blueprint   = module.repos_test.identifier
 
-  widgets      = []
+  widgets = [
+    {
+      id          = "repositorios-playwright-table"
+      type        = "table-entities-explorer"
+      blueprint   = "repos_test"
+      displayMode = "single"
+      dataset = {
+        combinator = "and"
+        rules      = []
+      }
+    }
+  ]
+
   page_filters = []
+}
+
+
+
+module "catalog_playwright_reports" {
+  source = "../modules/Page"
+
+  identifier  = "playwright_reports"
+  title       = "Reportes Playwright"
+  type        = "blueprint-entities"
+  description = "Catálogo de reportes de ejecución de pruebas Playwright - DEV."
+  icon        = "Test"
+  blueprint   = module.playwright_report.identifier
+
+  widgets = [
+    {
+      id          = "playwright-reports-table"
+      type        = "table-entities-explorer"
+      blueprint   = "playwrightReport"
+      displayMode = "single"
+      dataset = {
+        combinator = "and"
+        rules      = []
+      }
+    }
+  ]
+
+  page_filters = []
+}
+
+
+
+
+#Agente
+
+module "agent_playwright_report" {
+  source = "../modules/entity"
+
+  identifier           = "playwright_report_agent"
+  title                = "Playwright Report Agent"
+  blueprint_identifier = "_ai_agent"
+
+  string_props = {
+    description    = "Registra informes de Playwright (GitHub Actions) en el blueprint playwrightReport."
+    status         = "active"
+    execution_mode = "Automatic"
+    prompt         = <<-EOT
+      Eres el agente que registra informes de Playwright en Port. Recibiras el contenido del informe y metadatos de GitHub Actions (organizacion, repositorio, branch, commit, runId, runNumber, runUrl, workflow, reportUrl). Crea o actualiza UNA entidad en el blueprint playwrightReport con upsert_entity. Identifier: <repositorio>-<runId> en minusculas. Title: <workflow> #<runNumber> - <repositorio>. Rellena: organization, repository, branch, commit, pipeline, runId, runNumber, runUrl, reportUrl, executedAt (ISO 8601), durationMs, testsTotal, testsPassed, testsFailed, testsSkipped, testsFlaky, browsers (array), failedTests (array 'archivo > titulo'), tests (array de objetos con title, file, project, status, durationMs, error) y summary (markdown). status: failed si testsFailed>0; flaky si no hay fallos pero testsFlaky>0; interrupted si se interrumpio; si no passed. No inventes datos: si un valor no esta en el informe, omitelo. No modifiques otros blueprints. Al terminar responde con el identifier creado y un resumen de 1-2 lineas.
+    EOT
+  }
+
+  array_props = {
+    string_items = {
+      tools = [
+        "^(list|get|search)_.*",
+        "^upsert_entity$"
+      ]
+    }
+  }
+
+  many_relations = {
+    mcp_servers = []
+  }
 }

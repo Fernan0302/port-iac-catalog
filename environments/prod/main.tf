@@ -6,4 +6,7 @@ module "newrelic_ingesta" {
 
 module "playwright_ingesta" {
   source = "../../playwright-ingesta"
+
 }
+
+
